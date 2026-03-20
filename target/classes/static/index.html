@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoramento Piscina</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f4f9; text-align: center; padding: 20px; }
+        h1 { color: #333; }
+        .dashboard { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 30px; }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            width: 200px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .card h2 { margin: 0; font-size: 1.2rem; color: #666; }
+        .valor { font-size: 2.5rem; font-weight: bold; margin: 10px 0; }
+        
+        /* Cores para cada sensor */
+        #ph-valor { color: #e67e22; } /* Laranja */
+        #cloro-valor { color: #3498db; } /* Azul */
+        #temp-valor { color: #e74c3c; } /* Vermelho */
+    </style>
+</head>
+<body>
+
+    <h1>💧 Monitoramento da Piscina</h1>
+
+    <div class="dashboard">
+        <div class="card">
+            <h2>pH</h2>
+            <div id="ph-valor" class="valor">--</div>
+            <small>Escala 0-14</small>
+        </div>
+
+        <div class="card">
+            <h2>Cloro</h2>
+            <div id="cloro-valor" class="valor">--</div>
+            <small>ppm</small>
+        </div>
+
+        <div class="card">
+            <h2>Temperatura</h2>
+            <div id="temp-valor" class="valor">--</div>
+            <small>°C</small>
+        </div>
+    </div>
+
+    <script>
+        async function atualizarTela() {
+            try {
+                // 1. Chama o backend Java
+                const resposta = await fetch('/api/dados-piscina');
+                
+                // 2. Converte pra JSON
+                const dados = await resposta.json();
+                console.log("Dados recebidos:", dados); // Para você ver no F12 do navegador
+
+                // 3. Atualiza os números na tela (se o dado existir)
+                if (dados.ph !== undefined) {
+                    document.getElementById('ph-valor').innerText = dados.ph.toFixed(1);
+                }
+                if (dados.cloro !== undefined) {
+                    document.getElementById('cloro-valor').innerText = dados.cloro.toFixed(1);
+                }
+                if (dados.temperatura !== undefined) {
+                    document.getElementById('temp-valor').innerText = dados.temperatura.toFixed(1);
+                }
+
+            } catch (erro) {
+                console.error("Erro ao buscar dados:", erro);
+            }
+        }
+
+        // Atualiza a cada 3 segundos
+        setInterval(atualizarTela, 3000);
+        
+        // Chama a primeira vez imediatamente
+        atualizarTela();
+    </script>
+
+</body>
+</html>

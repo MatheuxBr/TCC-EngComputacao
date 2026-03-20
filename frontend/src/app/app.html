@@ -1,0 +1,54 @@
+<h1>💧 Monitoramento da Piscina com Alertas</h1>
+
+<div class="dashboard">
+  <div class="card" [class.alert]="alertPh()">
+    <h2>pH</h2>
+    @if (ph() !== null) {
+      <div id="ph-valor" class="valor">{{ ph() | number:'1.1-1' }}</div>
+    } @else {
+      <div id="ph-valor" class="valor">--</div>
+    }
+    <small>Escala 0-14</small>
+    @if (alertPh()) {
+      <div class="alert-msg">⚠ Fora do padrão (7.2 - 7.8)</div>
+    }
+  </div>
+
+  <div class="card" [class.alert]="alertCloro()">
+    <h2>Cloro</h2>
+    @if (cloro() !== null) {
+      <div id="cloro-valor" class="valor">{{ cloro() | number:'1.1-1' }}</div>
+    } @else {
+      <div id="cloro-valor" class="valor">--</div>
+    }
+    <small>ppm</small>
+    @if (alertCloro()) {
+      <div class="alert-msg">⚠ Fora do padrão (0.8 - 3.0)</div>
+    }
+  </div>
+
+  <div class="card" [class.alert]="alertTemp()">
+    <h2>Temperatura</h2>
+    @if (temperatura() !== null) {
+      <div id="temp-valor" class="valor">{{ temperatura() | number:'1.1-1' }}</div>
+    } @else {
+      <div id="temp-valor" class="valor">--</div>
+    }
+    <small>°C</small>
+    @if (alertTemp()) {
+      <div class="alert-msg">⚠ Fora do padrão (25 - 27)</div>
+    }
+  </div>
+</div>
+
+<div class="charts-container">
+  <div class="chart-wrapper">
+    <canvas baseChart [data]="chartDataPh" [options]="chartOptionsPh" type="line"></canvas>
+  </div>
+  <div class="chart-wrapper">
+    <canvas baseChart [data]="chartDataCloro" [options]="chartOptionsCloro" type="line"></canvas>
+  </div>
+  <div class="chart-wrapper">
+    <canvas baseChart [data]="chartDataTemp" [options]="chartOptionsTemp" type="line"></canvas>
+  </div>
+</div>
