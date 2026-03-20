@@ -8,7 +8,7 @@
 		<version>4.0.2</version>
 		<relativePath/>
 	</parent>
-	<groupId>medicao.exemplo</groupId>
+	<groupId>medicao.backend</groupId>
 	<artifactId>tcc</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>tcc</name>

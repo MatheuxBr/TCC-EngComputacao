@@ -1,4 +1,4 @@
-package medicao.exemplo.tcc.config; // Ajuste para seu pacote
+package medicao.backend.tcc.config;
 
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;

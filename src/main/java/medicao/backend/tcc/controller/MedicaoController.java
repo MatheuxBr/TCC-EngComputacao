@@ -1,13 +1,13 @@
-package medicao.exemplo.tcc.controller;
+package medicao.backend.tcc.controller;
 
-import medicao.exemplo.tcc.service.MedicaoService;
+import medicao.backend.tcc.service.MedicaoService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api") // <--- PRESTE ATENÇÃO AQUI (Prefixo)
+@RequestMapping("/api")
 public class MedicaoController {
 
     private final MedicaoService service;
@@ -16,7 +16,7 @@ public class MedicaoController {
         this.service = service;
     }
 
-    @GetMapping("/dados-piscina") // <--- PRESTE ATENÇÃO AQUI (Nome do recurso)
+    @GetMapping("/dados-piscina")
     public Map<String, Object> getDados() {
         return service.buscarUltimasMedicoes();
     }

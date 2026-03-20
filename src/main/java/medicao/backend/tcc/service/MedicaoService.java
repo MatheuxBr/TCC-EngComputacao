@@ -1,4 +1,4 @@
-package medicao.exemplo.tcc.service;
+package medicao.backend.tcc.service;
 
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.query.FluxRecord;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class MedicaoService { // <--- ESSA LINHA ERA A QUE FALTAVA
+public class MedicaoService {
 
     private final InfluxDBClient influxDBClient;
 
@@ -25,15 +25,14 @@ public class MedicaoService { // <--- ESSA LINHA ERA A QUE FALTAVA
         this.influxDBClient = influxDBClient;
     }
 
-
     // --- Parte 2: Ler (Query) ---
     public Map<String, Object> buscarUltimasMedicoes() {
         // Query Flux corrigida para pegar o último valor
         String query = "from(bucket: \"" + bucket + "\") " +
-                       "|> range(start: -24h) " + // Aumentei pra 24h pra garantir que acha seus dados
-                       "|> filter(fn: (r) => r[\"_measurement\"] == \"parametros_piscina\") " +
-                       "|> filter(fn: (r) => r[\"_field\"] == \"valor\") " +
-                       "|> last()";
+                "|> range(start: -24h) " + // Aumentei pra 24h pra garantir que acha seus dados
+                "|> filter(fn: (r) => r[\"_measurement\"] == \"parametros_piscina\") " +
+                "|> filter(fn: (r) => r[\"_field\"] == \"valor\") " +
+                "|> last()";
 
         // Executa a consulta
         List<FluxTable> tables = influxDBClient.getQueryApi().query(query, org);
@@ -57,9 +56,9 @@ public class MedicaoService { // <--- ESSA LINHA ERA A QUE FALTAVA
     // --- Parte 3: Ler Histórico (Query) ---
     public Map<String, List<Map<String, Object>>> buscarHistoricoMedicoes() {
         String query = "from(bucket: \"" + bucket + "\") " +
-                       "|> range(start: -24h) " + 
-                       "|> filter(fn: (r) => r[\"_measurement\"] == \"parametros_piscina\") " +
-                       "|> filter(fn: (r) => r[\"_field\"] == \"valor\") ";
+                "|> range(start: -24h) " +
+                "|> filter(fn: (r) => r[\"_measurement\"] == \"parametros_piscina\") " +
+                "|> filter(fn: (r) => r[\"_field\"] == \"valor\") ";
 
         List<FluxTable> tables = influxDBClient.getQueryApi().query(query, org);
 
