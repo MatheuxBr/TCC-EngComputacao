@@ -25,21 +25,16 @@ public class MedicaoService {
         this.influxDBClient = influxDBClient;
     }
 
-    // --- Parte 2: Ler (Query) ---
+    // LER
     public Map<String, Object> buscarUltimasMedicoes() {
-        // Query Flux corrigida para pegar o último valor
         String query = "from(bucket: \"" + bucket + "\") " +
-                "|> range(start: -24h) " + // Aumentei pra 24h pra garantir que acha seus dados
+                "|> range(start: -24h) " + // 24H
                 "|> filter(fn: (r) => r[\"_measurement\"] == \"parametros_piscina\") " +
                 "|> filter(fn: (r) => r[\"_field\"] == \"valor\") " +
                 "|> last()";
 
-        // Executa a consulta
         List<FluxTable> tables = influxDBClient.getQueryApi().query(query, org);
-
         Map<String, Object> resultado = new HashMap<>();
-
-        // Transforma a resposta do banco em algo que o HTML entende
         for (FluxTable table : tables) {
             for (FluxRecord record : table.getRecords()) {
                 String sensor = (String) record.getValueByKey("sensor_id");
@@ -53,7 +48,7 @@ public class MedicaoService {
         return resultado;
     }
 
-    // --- Parte 3: Ler Histórico (Query) ---
+    // HISTORICO
     public Map<String, List<Map<String, Object>>> buscarHistoricoMedicoes() {
         String query = "from(bucket: \"" + bucket + "\") " +
                 "|> range(start: -24h) " +
