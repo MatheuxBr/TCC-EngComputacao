@@ -29,15 +29,16 @@ public class MedicaoService {
     public Map<String, Object> buscarUltimasMedicoes() {
         String query = "from(bucket: \"" + bucket + "\") " +
                 "|> range(start: -24h) " + // 24H
-                "|> filter(fn: (r) => r[\"_measurement\"] == \"parametros_piscina\") " +
-                "|> filter(fn: (r) => r[\"_field\"] == \"valor\") " +
+                "|> filter(fn: (r) => r[\"_measurement\"] == \"mqtt_consumer\") " +
+                "|> group(columns: [\"_field\"]) " +
+                "|> sort(columns: [\"_time\"]) " +
                 "|> last()";
 
         List<FluxTable> tables = influxDBClient.getQueryApi().query(query, org);
         Map<String, Object> resultado = new HashMap<>();
         for (FluxTable table : tables) {
             for (FluxRecord record : table.getRecords()) {
-                String sensor = (String) record.getValueByKey("sensor_id");
+                String sensor = record.getField();
                 Object valor = record.getValue();
 
                 if (sensor != null) {
@@ -52,8 +53,10 @@ public class MedicaoService {
     public Map<String, List<Map<String, Object>>> buscarHistoricoMedicoes() {
         String query = "from(bucket: \"" + bucket + "\") " +
                 "|> range(start: -24h) " +
-                "|> filter(fn: (r) => r[\"_measurement\"] == \"parametros_piscina\") " +
-                "|> filter(fn: (r) => r[\"_field\"] == \"valor\") ";
+                "|> filter(fn: (r) => r[\"_measurement\"] == \"mqtt_consumer\") " +
+                "|> group(columns: [\"_field\"]) " +
+                "|> sort(columns: [\"_time\"]) " +
+                "|> tail(n: 20)";
 
         List<FluxTable> tables = influxDBClient.getQueryApi().query(query, org);
 
@@ -61,7 +64,7 @@ public class MedicaoService {
 
         for (FluxTable table : tables) {
             for (FluxRecord record : table.getRecords()) {
-                String sensor = (String) record.getValueByKey("sensor_id");
+                String sensor = record.getField();
                 Object valor = record.getValue();
                 java.time.Instant time = record.getTime();
 
