@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-TccApplication<tcc>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "medicao.backend.tcc.TccApplication",
+            "projectName": "tcc",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

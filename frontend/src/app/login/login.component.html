@@ -1,0 +1,31 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <!-- <div class="logo"></div> -->
+      <h2>Sistema de Monitoramento</h2>
+      <p>Acesso Restrito</p>
+    </div>
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+      <div class="input-group">
+        <label for="username">Usuário</label>
+        <input type="text" id="username" name="username" [(ngModel)]="credentials.username" required
+          placeholder="Digite seu usuário" />
+      </div>
+
+      <div class="input-group">
+        <label for="password">Senha</label>
+        <input type="password" id="password" name="password" [(ngModel)]="credentials.password" required
+          placeholder="Digite sua senha" />
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <button type="submit" [disabled]="isLoading || !loginForm.form.valid" class="btn-login">
+        <span *ngIf="!isLoading">Entrar</span>
+        <span *ngIf="isLoading" class="spinner">↻</span>
+      </button>
+    </form>
+  </div>
+</div>
