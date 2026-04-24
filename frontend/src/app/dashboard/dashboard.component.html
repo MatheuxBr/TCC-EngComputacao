@@ -1,57 +1,98 @@
-<div class="dashboard-header">
-  <h1>Monitoramento da Piscina</h1>
-  <button (click)="logout()" class="btn-logout">Sair</button>
+<div class="dashboard-topbar">
+  <div class="title-area">
+    <h1>Dashboard</h1>
+    <p>Monitoramento em Tempo Real</p>
+  </div>
+  <div class="actions">
+    <button (click)="exportarRelatorio()" class="btn-export">Exportar Relatório</button>
+    <button (click)="logout()" class="btn-logout">Sair</button>
+  </div>
 </div>
 
-<div class="dashboard">
-  <div class="card" [class.alert]="alertPh()">
-    <h2>pH</h2>
-    @if (ph() !== null) {
-    <div id="ph-valor" class="valor">{{ ph() | number:'1.1-1' }}</div>
-    } @else {
-    <div id="ph-valor" class="valor">--</div>
-    }
-    <small>Escala 0-14</small>
-    @if (alertPh()) {
-    <div class="alert-msg">⚠ Fora do padrão (7.2 - 7.8)</div>
-    }
-  </div>
-
-  <div class="card" [class.alert]="alertCloro()">
-    <h2>Cloro</h2>
-    @if (cloro() !== null) {
-    <div id="cloro-valor" class="valor">{{ cloro() | number:'1.1-1' }}</div>
-    } @else {
-    <div id="cloro-valor" class="valor">--</div>
-    }
-    <small>ppm</small>
-    @if (alertCloro()) {
-    <div class="alert-msg">⚠ Fora do padrão (0.8 - 3.0)</div>
-    }
-  </div>
-
-  <div class="card" [class.alert]="alertTemp()">
-    <h2>Temperatura</h2>
+<div class="cards-container">
+  <!-- Card Temperatura -->
+  <div class="card card-temp">
+    <div class="card-header">
+      <h2>Temperatura Atual</h2>
+      <div class="dot dot-temp"></div>
+    </div>
     @if (temperatura() !== null) {
-    <div id="temp-valor" class="valor">{{ temperatura() | number:'1.1-1' }}</div>
+      <p class="valor-grande">{{ temperatura() | number:'1.1-1' }} <span class="unidade">°C</span></p>
+      @if (alertTemp()) { <p class="subtext subtext-alert">Fora do padrão (25-27)</p> }
     } @else {
-    <div id="temp-valor" class="valor">--</div>
+      <div class="skeleton-loader skeleton-text-large"></div>
+      <div class="skeleton-loader skeleton-text-small"></div>
     }
-    <small>°C</small>
-    @if (alertTemp()) {
-    <div class="alert-msg">⚠ Fora do padrão (25 - 27)</div>
+  </div>
+
+  <!-- Card pH -->
+  <div class="card card-ph">
+    <div class="card-header">
+      <h2>Nível de pH</h2>
+      <div class="dot dot-ph"></div>
+    </div>
+    @if (ph() !== null) {
+      <p class="valor-grande">{{ ph() | number:'1.1-1' }}</p>
+      @if (alertPh()) { <p class="subtext subtext-alert">Fora do padrão (7.2-7.8)</p> }
+    } @else {
+      <div class="skeleton-loader skeleton-text-large"></div>
+      <div class="skeleton-loader skeleton-text-small"></div>
+    }
+  </div>
+
+  <!-- Card Cloro -->
+  <div class="card card-cloro">
+    <div class="card-header">
+      <h2>Nível de Cloro</h2>
+      <div class="dot dot-cloro"></div>
+    </div>
+    @if (cloro() !== null) {
+      <p class="valor-grande">{{ cloro() | number:'1.1-1' }} <span class="unidade">ppm</span></p>
+      @if (alertCloro()) { <p class="subtext subtext-alert">Fora do padrão (0.8-3.0)</p> }
+    } @else {
+      <div class="skeleton-loader skeleton-text-large"></div>
+      <div class="skeleton-loader skeleton-text-small"></div>
+    }
+  </div>
+
+  <!-- Card Status -->
+  <div class="card card-status">
+    <div class="card-header">
+      <h2>Status do Sistema</h2>
+      <div class="dot" [class.dot-status-ok]="!temAlerta()" [class.dot-status-alert]="temAlerta()"></div>
+    </div>
+    @if (temperatura() !== null) {
+      @if (temAlerta()) {
+        <p class="status-text status-alert">ALERTA</p>
+        <p class="subtext subtext-alert">Verifique os parâmetros</p>
+      } @else {
+        <p class="status-text status-ok">NORMAL</p>
+        <p class="subtext subtext-ok">Todos os parâmetros OK</p>
+      }
+    } @else {
+      <div class="skeleton-loader skeleton-text-large"></div>
+      <div class="skeleton-loader skeleton-text-small"></div>
     }
   </div>
 </div>
 
 <div class="charts-container">
   <div class="chart-wrapper">
-    <canvas baseChart [data]="chartDataPh" [options]="chartOptionsPh" type="line"></canvas>
+    <div class="chart-header">Evolução da Temperatura</div>
+    <div style="flex: 1; min-height: 0;">
+      <canvas baseChart [data]="chartDataTemp" [options]="chartOptionsDark" type="line"></canvas>
+    </div>
   </div>
   <div class="chart-wrapper">
-    <canvas baseChart [data]="chartDataCloro" [options]="chartOptionsCloro" type="line"></canvas>
+    <div class="chart-header">Evolução do pH</div>
+    <div style="flex: 1; min-height: 0;">
+      <canvas baseChart [data]="chartDataPh" [options]="chartOptionsDark" type="line"></canvas>
+    </div>
   </div>
   <div class="chart-wrapper">
-    <canvas baseChart [data]="chartDataTemp" [options]="chartOptionsTemp" type="line"></canvas>
+    <div class="chart-header">Evolução do Cloro</div>
+    <div style="flex: 1; min-height: 0;">
+      <canvas baseChart [data]="chartDataCloro" [options]="chartOptionsDark" type="line"></canvas>
+    </div>
   </div>
 </div>

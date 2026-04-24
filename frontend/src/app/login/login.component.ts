@@ -30,7 +30,7 @@ export class LoginComponent {
     this.authService.login(this.credentials).subscribe({
       next: () => {
         this.isLoading = false;
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/dashboard'], { replaceUrl: true });
       },
       error: (err) => {
         this.isLoading = false;
