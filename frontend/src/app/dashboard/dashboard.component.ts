@@ -25,6 +25,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   alertCloro = signal(false);
   alertTemp = signal(false);
 
+  periodoSelecionado = signal('24h');
+
   temAlerta = computed(() => this.alertTemp() || this.alertPh() || this.alertCloro());
 
   private sub?: Subscription;
@@ -70,6 +72,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.auth.logout();
   }
 
+  mudarPeriodo(periodo: string) {
+    this.periodoSelecionado.set(periodo);
+    this.fetchData(); // Busca imediatamente com o novo período
+  }
+
   exportarRelatorio() {
     const doc = new jsPDF();
     const date = new Date().toLocaleString();
@@ -90,8 +97,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
       const addData = (type: string, dataArray: any[]) => {
         if (!dataArray) return;
-        const subset = dataArray.slice(-20); // Últimos 20
-        for (const item of subset) {
+        for (const item of dataArray) {
           // Extrai hora e minuto (HH:mm)
           const time = new Date(item.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
           if (!timeMap.has(time)) timeMap.set(time, {});
@@ -140,7 +146,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private fetchData() {
-    this.http.get<any>('/api/historico').subscribe({
+    this.http.get<any>('/api/historico?periodo=' + this.periodoSelecionado()).subscribe({
       next: (historico) => {
         this.rawHistorico = historico;
         this.processHistory(historico);
@@ -157,7 +163,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   private processHistory(historico: any) {
     if (historico.ph && historico.ph.length > 0) {
-      const phHist = historico.ph.slice(-20);
+      const phHist = historico.ph;
       const lastPh = phHist[phHist.length - 1].valor as number;
       this.ph.set(lastPh);
       this.alertPh.set(lastPh < 7.2 || lastPh > 7.8);
@@ -175,7 +181,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     if (historico.cloro && historico.cloro.length > 0) {
-      const cHist = historico.cloro.slice(-20);
+      const cHist = historico.cloro;
       const lastC = cHist[cHist.length - 1].valor as number;
       this.cloro.set(lastC);
       this.alertCloro.set(lastC < 0.8 || lastC > 3.0);
@@ -193,7 +199,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     if (historico.temperatura && historico.temperatura.length > 0) {
-      const tHist = historico.temperatura.slice(-20);
+      const tHist = historico.temperatura;
       const lastT = tHist[tHist.length - 1].valor as number;
       this.temperatura.set(lastT);
       this.alertTemp.set(lastT < 25 || lastT > 27);

@@ -50,13 +50,17 @@ public class MedicaoService {
     }
 
     // HISTORICO
-    public Map<String, List<Map<String, Object>>> buscarHistoricoMedicoes() {
+    public Map<String, List<Map<String, Object>>> buscarHistoricoMedicoes(String periodo) {
+        if (periodo == null || !periodo.matches("^[0-9]+[hdw]$")) {
+            periodo = "24h";
+        }
+
         String query = "from(bucket: \"" + bucket + "\") " +
-                "|> range(start: -24h) " +
+                "|> range(start: -" + periodo + ") " +
                 "|> filter(fn: (r) => r[\"_measurement\"] == \"mqtt_consumer\") " +
                 "|> group(columns: [\"_field\"]) " +
                 "|> sort(columns: [\"_time\"]) " +
-                "|> tail(n: 20)";
+                "|> tail(n: 60)";
 
         List<FluxTable> tables = influxDBClient.getQueryApi().query(query, org);
 

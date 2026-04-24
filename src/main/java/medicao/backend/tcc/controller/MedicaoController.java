@@ -22,7 +22,8 @@ public class MedicaoController {
     }
 
     @GetMapping("/historico")
-    public java.util.Map<String, java.util.List<java.util.Map<String, Object>>> getHistorico() {
-        return service.buscarHistoricoMedicoes();
+    public java.util.Map<String, java.util.List<java.util.Map<String, Object>>> getHistorico(
+            @org.springframework.web.bind.annotation.RequestParam(defaultValue = "24h") String periodo) {
+        return service.buscarHistoricoMedicoes(periodo);
     }
 }

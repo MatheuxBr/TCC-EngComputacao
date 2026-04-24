@@ -26,6 +26,38 @@
 .actions {
   display: flex;
   gap: 15px;
+  align-items: center;
+}
+
+.filters {
+  display: flex;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.filters button {
+  background: transparent;
+  border: none;
+  color: #8b9bb4;
+  padding: 6px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+  font-family: 'Inter', sans-serif;
+}
+
+.filters button:hover {
+  color: #e2e8f0;
+}
+
+.filters button.active {
+  background-color: #3b82f6;
+  color: white;
+  box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
 }
 
 .btn-export {
