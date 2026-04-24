@@ -41,8 +41,3 @@ O sistema é construído com foco em **desempenho e usabilidade**, utilizando um
 - **Chart.js & ng2-charts** (Visualização de dados)
 - **jsPDF** (Geração de relatórios PDF)
 - **TypeScript**
-
----
-<div align="center">
-  Desenvolvido com 💙 por <a href="https://github.com/MatheuxBr">Matheux</a>
-</div>
