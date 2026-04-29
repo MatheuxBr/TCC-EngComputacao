@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DecimalPipe } from '@angular/common';
-import { Subscription, interval } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { Client } from '@stomp/stompjs';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { AuthService } from '../auth.service';
@@ -30,6 +31,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   temAlerta = computed(() => this.alertTemp() || this.alertPh() || this.alertCloro());
 
   private sub?: Subscription;
+  private stompClient?: Client;
   private rawHistorico: any = null;
 
   chartDataPh: ChartConfiguration<'line'>['data'] = { datasets: [], labels: [] };
@@ -61,11 +63,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.fetchData();
-    this.sub = interval(3000).subscribe(() => this.fetchData());
+    this.connectWebSocket();
   }
 
   ngOnDestroy() {
     this.sub?.unsubscribe();
+    if (this.stompClient) {
+      this.stompClient.deactivate();
+    }
   }
 
   logout() {
@@ -74,7 +79,62 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   mudarPeriodo(periodo: string) {
     this.periodoSelecionado.set(periodo);
-    this.fetchData(); // Busca imediatamente com o novo período
+    this.fetchData();
+  }
+
+  private connectWebSocket() {
+    // Usar o endpoint configurado no proxy
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = `${protocol}//${window.location.host}/ws`;
+
+    this.stompClient = new Client({
+      brokerURL: wsUrl, // Usar brokerURL nativo em vez de webSocketFactory com SockJS
+      debug: (str) => {
+        // console.log(str);
+      },
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+    });
+
+    this.stompClient.onConnect = (frame) => {
+      this.stompClient?.subscribe('/topic/medicoes', (message) => {
+        if (message.body) {
+          const dados = JSON.parse(message.body);
+          this.atualizarDadosTempoReal(dados);
+        }
+      });
+    };
+
+    this.stompClient.activate();
+  }
+
+  private atualizarDadosTempoReal(dados: any) {
+    const timeLabel = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    if (dados.ph !== undefined) {
+      this.ph.set(dados.ph);
+      this.alertPh.set(dados.ph < 7.2 || dados.ph > 7.8);
+      this.chartDataPh.labels?.push(timeLabel);
+      this.chartDataPh.datasets[0].data.push(dados.ph);
+      this.chartDataPh = { ...this.chartDataPh };
+    }
+
+    if (dados.cloro !== undefined) {
+      this.cloro.set(dados.cloro);
+      this.alertCloro.set(dados.cloro < 0.8 || dados.cloro > 3.0);
+      this.chartDataCloro.labels?.push(timeLabel);
+      this.chartDataCloro.datasets[0].data.push(dados.cloro);
+      this.chartDataCloro = { ...this.chartDataCloro };
+    }
+
+    if (dados.temperatura !== undefined) {
+      this.temperatura.set(dados.temperatura);
+      this.alertTemp.set(dados.temperatura < 25 || dados.temperatura > 27);
+      this.chartDataTemp.labels?.push(timeLabel);
+      this.chartDataTemp.datasets[0].data.push(dados.temperatura);
+      this.chartDataTemp = { ...this.chartDataTemp };
+    }
   }
 
   exportarRelatorio() {
@@ -92,13 +152,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
     doc.text(`Gerado em: ${date}`, 14, 30);
 
     if (this.rawHistorico) {
-      // Unificar os dados por hora
       const timeMap = new Map<string, any>();
 
       const addData = (type: string, dataArray: any[]) => {
         if (!dataArray) return;
         for (const item of dataArray) {
-          // Extrai hora e minuto (HH:mm)
+          // Extrai hora e minuto
           const time = new Date(item.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
           if (!timeMap.has(time)) timeMap.set(time, {});
           timeMap.get(time)[type] = item.valor;
