@@ -3,29 +3,65 @@
     <div class="login-header">
       <!-- <div class="logo"></div> -->
       <h2>Sistema de Monitoramento</h2>
-      <p>Acesso Restrito</p>
+      <p>{{ isRegisterMode ? 'Criar Conta' : 'Acesso Restrito' }}</p>
     </div>
-    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
-      <div class="input-group">
-        <label for="username">Usuário</label>
-        <input type="text" id="username" name="username" [(ngModel)]="credentials.username" required
-          placeholder="Digite seu usuário" />
-      </div>
 
-      <div class="input-group">
-        <label for="password">Senha</label>
-        <input type="password" id="password" name="password" [(ngModel)]="credentials.password" required
-          placeholder="Digite sua senha" />
-      </div>
+    <div class="success-message" *ngIf="successMessage">
+      {{ successMessage }}
+    </div>
+
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+
+      <!-- Login Fields -->
+      <ng-container *ngIf="!isRegisterMode">
+        <div class="input-group">
+          <label for="username">Usuário</label>
+          <input type="text" id="username" name="username" [(ngModel)]="credentials.username" required
+            placeholder="Digite seu usuário" />
+        </div>
+
+        <div class="input-group">
+          <label for="password">Senha</label>
+          <input type="password" id="password" name="password" [(ngModel)]="credentials.password" required
+            placeholder="Digite sua senha" />
+        </div>
+      </ng-container>
+
+      <!-- Register Fields -->
+      <ng-container *ngIf="isRegisterMode">
+        <div class="input-group">
+          <label for="reg-username">Usuário</label>
+          <input type="text" id="reg-username" name="reg-username" [(ngModel)]="registerData.username" required
+            placeholder="Escolha um usuário" />
+        </div>
+
+        <div class="input-group">
+          <label for="reg-email">E-mail</label>
+          <input type="email" id="reg-email" name="reg-email" [(ngModel)]="registerData.email" required
+            placeholder="Digite seu e-mail" />
+        </div>
+
+        <div class="input-group">
+          <label for="reg-password">Senha</label>
+          <input type="password" id="reg-password" name="reg-password" [(ngModel)]="registerData.password" required
+            placeholder="Escolha uma senha" />
+        </div>
+      </ng-container>
 
       <div class="error-message" *ngIf="errorMessage">
         {{ errorMessage }}
       </div>
 
-      <button type="submit" [disabled]="isLoading || !loginForm.form.valid" class="btn-login">
-        <span *ngIf="!isLoading">Entrar</span>
+      <button type="submit" [disabled]="isLoading" class="btn-login">
+        <span *ngIf="!isLoading">{{ isRegisterMode ? 'Registrar' : 'Entrar' }}</span>
         <span *ngIf="isLoading" class="spinner">↻</span>
       </button>
+
+      <div class="toggle-mode">
+        <a href="javascript:void(0)" (click)="toggleMode()">
+          {{ isRegisterMode ? 'Faça login' : 'Registre-se' }}
+        </a>
+      </div>
     </form>
   </div>
 </div>

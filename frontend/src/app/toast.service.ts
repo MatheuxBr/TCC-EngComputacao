@@ -14,14 +14,15 @@ export class ToastService {
   private idCounter = 0;
 
   show(message: string, type: 'success' | 'error' | 'warning' | 'info' = 'info', duration = 4000) {
-    const id = this.idCounter++;
-    const newToast: Toast = { message, type, id };
-    
-    this.toasts.update(current => [...current, newToast]);
+    // Pop-ups de alertas desativados
+    // const id = this.idCounter++;
+    // const newToast: Toast = { message, type, id };
+    // 
+    // this.toasts.update(current => [...current, newToast]);
 
-    setTimeout(() => {
-      this.remove(id);
-    }, duration);
+    // setTimeout(() => {
+    //   this.remove(id);
+    // }, duration);
   }
 
   remove(id: number) {

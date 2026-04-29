@@ -153,10 +153,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error("Erro ao buscar historico:", err);
-        // Não mostra erro se for status 0 (aba dormindo/sem internet) ou erro de auth
-        if (err.status !== 0 && err.status !== 401 && err.status !== 403) {
-          this.toastService.show('Conectando com o servidor', 'info');
-        }
       }
     });
   }

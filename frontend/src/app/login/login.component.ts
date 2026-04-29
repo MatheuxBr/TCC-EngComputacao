@@ -13,12 +13,31 @@ import { AuthService } from '../auth.service';
 })
 export class LoginComponent {
   credentials = { username: '', password: '' };
+  registerData = { username: '', email: '', password: '' };
+  isRegisterMode = false;
   errorMessage = '';
+  successMessage = '';
   isLoading = false;
 
   constructor(private authService: AuthService, private router: Router) {}
 
+  toggleMode() {
+    this.isRegisterMode = !this.isRegisterMode;
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.credentials = { username: '', password: '' };
+    this.registerData = { username: '', email: '', password: '' };
+  }
+
   onSubmit() {
+    if (this.isRegisterMode) {
+      this.register();
+    } else {
+      this.login();
+    }
+  }
+
+  login() {
     if (!this.credentials.username || !this.credentials.password) {
       this.errorMessage = 'Preencha usuário e senha.';
       return;
@@ -26,6 +45,7 @@ export class LoginComponent {
     
     this.isLoading = true;
     this.errorMessage = '';
+    this.successMessage = '';
 
     this.authService.login(this.credentials).subscribe({
       next: () => {
@@ -36,6 +56,30 @@ export class LoginComponent {
         this.isLoading = false;
         this.errorMessage = 'Credenciais inválidas. Tente novamente.';
         console.error('Login erro:', err);
+      }
+    });
+  }
+
+  register() {
+    if (!this.registerData.username || !this.registerData.email || !this.registerData.password) {
+      this.errorMessage = 'Preencha todos os campos.';
+      return;
+    }
+    
+    this.isLoading = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    this.authService.register(this.registerData).subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.successMessage = 'Usuário registrado com sucesso! Faça login.';
+        this.isRegisterMode = false;
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.errorMessage = err.error?.error || 'Erro ao registrar usuário.';
+        console.error('Register erro:', err);
       }
     });
   }

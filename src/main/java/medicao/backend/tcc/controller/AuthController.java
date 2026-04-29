@@ -1,6 +1,8 @@
 package medicao.backend.tcc.controller;
 
-import medicao.backend.tcc.security.JwtUtil;
+import medicao.backend.tcc.dto.LoginRequest;
+import medicao.backend.tcc.dto.RegisterRequest;
+import medicao.backend.tcc.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,22 +13,29 @@ import java.util.Map;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private final JwtUtil jwtUtil;
+    private final AuthService authService;
 
-    public AuthController(JwtUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
-        String username = credentials.get("username");
-        String password = credentials.get("password");
-
-        if ("admin".equals(username) && "admin".equals(password)) {
-            String token = jwtUtil.generateToken(username);
+    public ResponseEntity<?> login(@RequestBody LoginRequest credentials) {
+        String token = authService.authenticate(credentials);
+        if (token != null) {
             return ResponseEntity.ok(Map.of("token", token));
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Credenciais inválidas"));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+        try {
+            authService.register(request);
+            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("message", "Usuário criado com sucesso!"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+        }
     }
 }
