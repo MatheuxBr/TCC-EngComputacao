@@ -19,7 +19,10 @@ export class LoginComponent {
   successMessage = '';
   isLoading = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) { }
 
   toggleMode() {
     this.isRegisterMode = !this.isRegisterMode;
@@ -42,7 +45,7 @@ export class LoginComponent {
       this.errorMessage = 'Preencha usuário e senha.';
       return;
     }
-    
+
     this.isLoading = true;
     this.errorMessage = '';
     this.successMessage = '';
@@ -55,6 +58,7 @@ export class LoginComponent {
       error: (err) => {
         this.isLoading = false;
         this.errorMessage = 'Credenciais inválidas. Tente novamente.';
+        alert('Erro ao fazer login. Verifique suas credenciais.');
         console.error('Login erro:', err);
       }
     });
@@ -65,7 +69,7 @@ export class LoginComponent {
       this.errorMessage = 'Preencha todos os campos.';
       return;
     }
-    
+
     this.isLoading = true;
     this.errorMessage = '';
     this.successMessage = '';
@@ -75,10 +79,13 @@ export class LoginComponent {
         this.isLoading = false;
         this.successMessage = 'Usuário registrado com sucesso! Faça login.';
         this.isRegisterMode = false;
+        alert('Usuário criado com sucesso!');
+        this.credentials.username = this.registerData.username;
       },
       error: (err) => {
         this.isLoading = false;
         this.errorMessage = err.error?.error || 'Erro ao registrar usuário.';
+        alert(this.errorMessage);
         console.error('Register erro:', err);
       }
     });
