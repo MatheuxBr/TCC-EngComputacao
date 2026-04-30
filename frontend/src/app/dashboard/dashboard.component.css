@@ -118,7 +118,7 @@
 
 .card-temp::before { box-shadow: inset 0 0 50px #3b82f6; }
 .card-ph::before { box-shadow: inset 0 0 50px #8b5cf6; }
-.card-cloro::before { box-shadow: inset 0 0 50px #f59e0b; }
+.card-orp::before { box-shadow: inset 0 0 50px #f59e0b; }
 .card-status::before { box-shadow: inset 0 0 50px #10b981; }
 
 .card-header {
@@ -142,7 +142,7 @@
 }
 .dot-temp { background-color: #3b82f6; box-shadow: 0 0 10px #3b82f6; }
 .dot-ph { background-color: #8b5cf6; box-shadow: 0 0 10px #8b5cf6; }
-.dot-cloro { background-color: #f59e0b; box-shadow: 0 0 10px #f59e0b; }
+.dot-orp { background-color: #f59e0b; box-shadow: 0 0 10px #f59e0b; }
 .dot-status-ok { background-color: #10b981; box-shadow: 0 0 10px #10b981; }
 .dot-status-alert { background-color: #ef4444; box-shadow: 0 0 10px #ef4444; }
 

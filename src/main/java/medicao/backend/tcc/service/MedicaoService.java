@@ -42,9 +42,6 @@ public class MedicaoService {
                 Object valor = record.getValue();
 
                 if (sensor != null) {
-                    if (sensor.equals("orp")) {
-                        sensor = "cloro";
-                    }
                     resultado.put(sensor, valor);
                 }
             }
@@ -76,9 +73,6 @@ public class MedicaoService {
                 java.time.Instant time = record.getTime();
 
                 if (sensor != null) {
-                    if (sensor.equals("orp")) {
-                        sensor = "cloro";
-                    }
                     resultado.putIfAbsent(sensor, new java.util.ArrayList<>());
                     Map<String, Object> ponto = new HashMap<>();
                     ponto.put("time", time != null ? time.toString() : null);

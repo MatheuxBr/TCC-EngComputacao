@@ -22,11 +22,11 @@
       <div class="dot dot-temp"></div>
     </div>
     @if (temperatura() !== null) {
-      <p class="valor-grande">{{ temperatura() | number:'1.1-1' }} <span class="unidade">°C</span></p>
-      @if (alertTemp()) { <p class="subtext subtext-alert">Fora do padrão (25-27)</p> }
+    <p class="valor-grande">{{ temperatura() | number:'1.1-1' }} <span class="unidade">°C</span></p>
+    @if (alertTemp()) { <p class="subtext subtext-alert">Fora do padrão (25-27)</p> }
     } @else {
-      <div class="skeleton-loader skeleton-text-large"></div>
-      <div class="skeleton-loader skeleton-text-small"></div>
+    <div class="skeleton-loader skeleton-text-large"></div>
+    <div class="skeleton-loader skeleton-text-small"></div>
     }
   </div>
 
@@ -37,26 +37,26 @@
       <div class="dot dot-ph"></div>
     </div>
     @if (ph() !== null) {
-      <p class="valor-grande">{{ ph() | number:'1.1-1' }}</p>
-      @if (alertPh()) { <p class="subtext subtext-alert">Fora do padrão (7.2-7.8)</p> }
+    <p class="valor-grande">{{ ph() | number:'1.1-1' }}</p>
+    @if (alertPh()) { <p class="subtext subtext-alert">Fora do padrão (7.2-7.8)</p> }
     } @else {
-      <div class="skeleton-loader skeleton-text-large"></div>
-      <div class="skeleton-loader skeleton-text-small"></div>
+    <div class="skeleton-loader skeleton-text-large"></div>
+    <div class="skeleton-loader skeleton-text-small"></div>
     }
   </div>
 
-  <!-- Card Cloro -->
-  <div class="card card-cloro">
+  <!-- Card ORP -->
+  <div class="card card-orp">
     <div class="card-header">
-      <h2>Nível de Cloro</h2>
-      <div class="dot dot-cloro"></div>
+      <h2>Nível de ORP</h2>
+      <div class="dot dot-orp"></div>
     </div>
-    @if (cloro() !== null) {
-      <p class="valor-grande">{{ cloro() | number:'1.1-1' }} <span class="unidade">ppm</span></p>
-      @if (alertCloro()) { <p class="subtext subtext-alert">Fora do padrão (0.8-3.0)</p> }
+    @if (orp() !== null) {
+    <p class="valor-grande">{{ orp() | number:'1.1-1' }} <span class="unidade">mV</span></p>
+    @if (alertOrp()) { <p class="subtext subtext-alert">Fora do padrão (650-750)</p> }
     } @else {
-      <div class="skeleton-loader skeleton-text-large"></div>
-      <div class="skeleton-loader skeleton-text-small"></div>
+    <div class="skeleton-loader skeleton-text-large"></div>
+    <div class="skeleton-loader skeleton-text-small"></div>
     }
   </div>
 
@@ -67,16 +67,16 @@
       <div class="dot" [class.dot-status-ok]="!temAlerta()" [class.dot-status-alert]="temAlerta()"></div>
     </div>
     @if (temperatura() !== null) {
-      @if (temAlerta()) {
-        <p class="status-text status-alert">ALERTA</p>
-        <p class="subtext subtext-alert">Verifique os parâmetros</p>
-      } @else {
-        <p class="status-text status-ok">NORMAL</p>
-        <p class="subtext subtext-ok">Todos os parâmetros OK</p>
-      }
+    @if (temAlerta()) {
+    <p class="status-text status-alert">ALERTA</p>
+    <p class="subtext subtext-alert">Verifique os parâmetros</p>
     } @else {
-      <div class="skeleton-loader skeleton-text-large"></div>
-      <div class="skeleton-loader skeleton-text-small"></div>
+    <p class="status-text status-ok">NORMAL</p>
+    <p class="subtext subtext-ok">Todos os parâmetros OK</p>
+    }
+    } @else {
+    <div class="skeleton-loader skeleton-text-large"></div>
+    <div class="skeleton-loader skeleton-text-small"></div>
     }
   </div>
 </div>
@@ -95,9 +95,9 @@
     </div>
   </div>
   <div class="chart-wrapper">
-    <div class="chart-header">Evolução do Cloro</div>
+    <div class="chart-header">Evolução do ORP</div>
     <div style="flex: 1; min-height: 0;">
-      <canvas baseChart [data]="chartDataCloro" [options]="chartOptionsDark" type="line"></canvas>
+      <canvas baseChart [data]="chartDataOrp" [options]="chartOptionsDark" type="line"></canvas>
     </div>
   </div>
 </div>

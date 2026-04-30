@@ -19,23 +19,23 @@ import { ToastService } from '../toast.service';
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   ph = signal<number | null>(null);
-  cloro = signal<number | null>(null);
+  orp = signal<number | null>(null);
   temperatura = signal<number | null>(null);
 
   alertPh = signal(false);
-  alertCloro = signal(false);
+  alertOrp = signal(false);
   alertTemp = signal(false);
 
   periodoSelecionado = signal('24h');
 
-  temAlerta = computed(() => this.alertTemp() || this.alertPh() || this.alertCloro());
+  temAlerta = computed(() => this.alertTemp() || this.alertPh() || this.alertOrp());
 
   private sub?: Subscription;
   private stompClient?: Client;
   private rawHistorico: any = null;
 
   chartDataPh: ChartConfiguration<'line'>['data'] = { datasets: [], labels: [] };
-  chartDataCloro: ChartConfiguration<'line'>['data'] = { datasets: [], labels: [] };
+  chartDataOrp: ChartConfiguration<'line'>['data'] = { datasets: [], labels: [] };
   chartDataTemp: ChartConfiguration<'line'>['data'] = { datasets: [], labels: [] };
 
   chartOptionsDark: ChartOptions<'line'> = {
@@ -120,12 +120,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.chartDataPh = { ...this.chartDataPh };
     }
 
-    if (dados.cloro !== undefined) {
-      this.cloro.set(dados.cloro);
-      this.alertCloro.set(dados.cloro < 0.8 || dados.cloro > 3.0);
-      this.chartDataCloro.labels?.push(timeLabel);
-      this.chartDataCloro.datasets[0].data.push(dados.cloro);
-      this.chartDataCloro = { ...this.chartDataCloro };
+    if (dados.orp !== undefined) {
+      this.orp.set(dados.orp);
+      this.alertOrp.set(dados.orp < 650 || dados.orp > 750);
+      this.chartDataOrp.labels?.push(timeLabel);
+      this.chartDataOrp.datasets[0].data.push(dados.orp);
+      this.chartDataOrp = { ...this.chartDataOrp };
     }
 
     if (dados.temperatura !== undefined) {
@@ -166,7 +166,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
       addData('temp', this.rawHistorico.temperatura);
       addData('ph', this.rawHistorico.ph);
-      addData('cloro', this.rawHistorico.cloro);
+      addData('orp', this.rawHistorico.orp);
 
       // Ordenar do mais antigo pro mais novo (crescente)
       const sortedTimes = Array.from(timeMap.keys()).sort();
@@ -175,13 +175,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
         const row = timeMap.get(time);
         const tVal = row.temp !== undefined ? Number(row.temp).toFixed(1) + ' °C' : '--';
         const pVal = row.ph !== undefined ? Number(row.ph).toFixed(1) : '--';
-        const cVal = row.cloro !== undefined ? Number(row.cloro).toFixed(1) + ' ppm' : '--';
-        return [time, tVal, pVal, cVal];
+        const oVal = row.orp !== undefined ? Number(row.orp).toFixed(1) + ' mV' : '--';
+        return [time, tVal, pVal, oVal];
       });
 
       autoTable(doc, {
         startY: 40,
-        head: [['Hora da Leitura', 'Temperatura', 'Nível de pH', 'Nível de Cloro']],
+        head: [['Hora da Leitura', 'Temperatura', 'Nível de pH', 'Nível de ORP']],
         body: body,
         theme: 'striped',
         styles: { fontSize: 10, cellPadding: 8, textColor: [80, 80, 80] },
@@ -235,16 +235,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
       };
     }
 
-    if (historico.cloro && historico.cloro.length > 0) {
-      const cHist = historico.cloro;
-      const lastC = cHist[cHist.length - 1].valor as number;
-      this.cloro.set(lastC);
-      this.alertCloro.set(lastC < 0.8 || lastC > 3.0);
-      this.chartDataCloro = {
-        labels: cHist.map((h: any) => new Date(h.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })),
+    if (historico.orp && historico.orp.length > 0) {
+      const oHist = historico.orp;
+      const lastO = oHist[oHist.length - 1].valor as number;
+      this.orp.set(lastO);
+      this.alertOrp.set(lastO < 650 || lastO > 750);
+      this.chartDataOrp = {
+        labels: oHist.map((h: any) => new Date(h.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })),
         datasets: [{
-          data: cHist.map((h: any) => h.valor),
-          label: 'Cloro (ppm)',
+          data: oHist.map((h: any) => h.valor),
+          label: 'ORP (mV)',
           borderColor: '#f59e0b',
           backgroundColor: 'rgba(245, 158, 11, 0.2)',
           fill: true,
