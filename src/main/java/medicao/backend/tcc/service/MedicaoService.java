@@ -55,12 +55,26 @@ public class MedicaoService {
             periodo = "24h";
         }
 
+        // Ajustar o número de pontos baseado no período
+        int tailLimit;
+        switch (periodo) {
+            case "1h":
+                tailLimit = 60;
+                break;
+            case "7d":
+                tailLimit = 200;
+                break;
+            default:
+                tailLimit = 120;
+                break;
+        }
+
         String query = "from(bucket: \"" + bucket + "\") " +
                 "|> range(start: -" + periodo + ") " +
                 "|> filter(fn: (r) => r[\"_measurement\"] == \"mqtt_consumer\") " +
                 "|> group(columns: [\"_field\"]) " +
                 "|> sort(columns: [\"_time\"]) " +
-                "|> tail(n: 60)";
+                "|> tail(n: " + tailLimit + ")";
 
         List<FluxTable> tables = influxDBClient.getQueryApi().query(query, org);
 
