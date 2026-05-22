@@ -7,8 +7,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: tcc_db
-      MYSQL_USER: tcc_user
-      MYSQL_PASSWORD: tcc_password
+      MYSQL_USER: tcc_admin
+      MYSQL_PASSWORD: tcc_Fineco
     ports:
       - "3306:3306"
     volumes:

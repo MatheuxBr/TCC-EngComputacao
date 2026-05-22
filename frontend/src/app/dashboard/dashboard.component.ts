@@ -61,6 +61,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   constructor(private http: HttpClient, private auth: AuthService, private toastService: ToastService, private ngZone: NgZone) { }
 
+  get isAdmin(): boolean {
+    return this.auth.isAdmin();
+  }
+
   ngOnInit() {
     this.fetchData();
     this.connectWebSocket();

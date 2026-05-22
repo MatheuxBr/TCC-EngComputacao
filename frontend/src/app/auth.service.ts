@@ -16,6 +16,9 @@ export class AuthService {
       tap(response => {
         if (response && response.success) {
           localStorage.setItem('username', response.username);
+          if (response.id_nivel) {
+            localStorage.setItem('id_nivel', response.id_nivel.toString());
+          }
         }
       })
     );
@@ -27,6 +30,7 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('username');
+    localStorage.removeItem('id_nivel');
     this.router.navigate(['/login']);
   }
 
@@ -36,5 +40,10 @@ export class AuthService {
 
   getUsername(): string | null {
     return localStorage.getItem('username');
+  }
+
+  isAdmin(): boolean {
+    const nivel = localStorage.getItem('id_nivel');
+    return nivel === '1'; // 1 representa Admin
   }
 }

@@ -21,9 +21,14 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest credentials) {
-        boolean isAuthenticated = authService.authenticate(credentials);
-        if (isAuthenticated) {
-            return ResponseEntity.ok(Map.of("success", true, "username", credentials.getUsername()));
+        medicao.backend.tcc.model.Usuario usuario = authService.authenticate(credentials);
+        if (usuario != null) {
+            Integer idNivel = usuario.getNivelAcesso() != null ? usuario.getNivelAcesso().getIdNivel() : null;
+            return ResponseEntity.ok(Map.of(
+                "success", true,
+                "username", credentials.getUsername(),
+                "id_nivel", idNivel != null ? idNivel : 2
+            ));
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Credenciais inválidas"));

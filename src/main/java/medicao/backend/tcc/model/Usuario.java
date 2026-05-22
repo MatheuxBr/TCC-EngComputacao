@@ -24,4 +24,8 @@ public class Usuario {
 
     @Column(nullable = false)
     private String senha;
+
+    @ManyToOne
+    @JoinColumn(name = "id_nivel", nullable = false)
+    private NivelAcesso nivelAcesso;
 }

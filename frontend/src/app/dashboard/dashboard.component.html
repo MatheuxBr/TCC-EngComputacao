@@ -9,7 +9,9 @@
       <button (click)="mudarPeriodo('24h')" [class.active]="periodoSelecionado() === '24h'">24 Horas</button>
       <button (click)="mudarPeriodo('7d')" [class.active]="periodoSelecionado() === '7d'">7 Dias</button>
     </div>
-    <button (click)="exportarRelatorio()" class="btn-export">Exportar Relatório</button>
+    @if (isAdmin) {
+      <button (click)="exportarRelatorio()" class="btn-export">Exportar Relatório</button>
+    }
     <button (click)="logout()" class="btn-logout">Sair</button>
   </div>
 </div>

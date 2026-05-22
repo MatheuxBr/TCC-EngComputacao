@@ -20,16 +20,16 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public boolean authenticate(LoginRequest request) {
+    public Usuario authenticate(LoginRequest request) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findByUsuario(request.getUsername());
-        
+
         if (usuarioOpt.isPresent()) {
             Usuario usuario = usuarioOpt.get();
             if (passwordEncoder.matches(request.getPassword(), usuario.getSenha())) {
-                return true;
+                return usuario;
             }
         }
-        return false;
+        return null;
     }
 
     public Usuario register(RegisterRequest request) {
@@ -44,6 +44,10 @@ public class AuthService {
         novoUsuario.setUsuario(request.getUsername());
         novoUsuario.setEmail(request.getEmail());
         novoUsuario.setSenha(passwordEncoder.encode(request.getPassword()));
+
+        medicao.backend.tcc.model.NivelAcesso nivelComum = new medicao.backend.tcc.model.NivelAcesso();
+        nivelComum.setIdNivel(2);
+        novoUsuario.setNivelAcesso(nivelComum);
 
         return usuarioRepository.save(novoUsuario);
     }
