@@ -21,9 +21,9 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest credentials) {
-        String token = authService.authenticate(credentials);
-        if (token != null) {
-            return ResponseEntity.ok(Map.of("token", token));
+        boolean isAuthenticated = authService.authenticate(credentials);
+        if (isAuthenticated) {
+            return ResponseEntity.ok(Map.of("success", true, "username", credentials.getUsername()));
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Credenciais inválidas"));

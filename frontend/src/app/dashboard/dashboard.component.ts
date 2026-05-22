@@ -79,7 +79,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   mudarPeriodo(periodo: string) {
     this.periodoSelecionado.set(periodo);
-    // Reset current values to show skeleton loaders while loading
     this.ph.set(null);
     this.orp.set(null);
     this.temperatura.set(null);
@@ -90,14 +89,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private connectWebSocket() {
-    // Usar o endpoint configurado no proxy
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const wsUrl = `${protocol}//${window.location.host}/ws`;
 
     this.stompClient = new Client({
       brokerURL: wsUrl,
       debug: (str) => {
-        // console.log(str);
       },
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
@@ -136,7 +133,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       if (this.chartDataPh.datasets.length > 0) {
         this.chartDataPh.labels?.push(timeLabel);
         this.chartDataPh.datasets[0].data.push(dados.ph);
-        // Limitar a quantidade de pontos no gráfico
         if (this.chartDataPh.labels && this.chartDataPh.labels.length > MAX_POINTS) {
           this.chartDataPh.labels.shift();
           this.chartDataPh.datasets[0].data.shift();
@@ -195,12 +191,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const date = new Date().toLocaleString();
     const periodoLabel = this.getPeriodoLabel();
 
-    // Título
     doc.setFontSize(22);
     doc.setTextColor(20, 30, 50);
     doc.text('Relatório de Qualidade da Água', 14, 22);
 
-    // Subtítulo
     doc.setFontSize(11);
     doc.setTextColor(120, 130, 140);
     doc.text(`Gerado em: ${date}`, 14, 30);
@@ -223,7 +217,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       addData('ph', this.rawHistorico.ph);
       addData('orp', this.rawHistorico.orp);
 
-      // Ordenar do mais antigo pro mais novo (crescente)
       const sortedTimes = Array.from(timeMap.keys()).sort();
 
       const body = sortedTimes.map(time => {
