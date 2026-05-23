@@ -28,7 +28,7 @@ export class GerenciadorUsuariosComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        this.toastService.showError('Erro ao carregar usuários');
+        this.toastService.show('Erro ao carregar usuários', 'error');
         this.isLoading = false;
       }
     });
@@ -38,11 +38,11 @@ export class GerenciadorUsuariosComponent implements OnInit {
     if (confirm('Tem certeza que deseja promover este usuário a Administrador?')) {
       this.userService.promoverParaAdmin(id).subscribe({
         next: () => {
-          this.toastService.showSuccess('Usuário promovido com sucesso!');
+          this.toastService.show('Usuário promovido com sucesso!', 'success');
           this.carregarUsuarios();
         },
         error: () => {
-          this.toastService.showError('Erro ao promover usuário');
+          this.toastService.show('Erro ao promover usuário', 'error');
         }
       });
     }
