@@ -7,7 +7,6 @@ export const guestGuard: CanActivateFn = () => {
   const router = inject(Router);
 
   if (authService.isAuthenticated()) {
-    // Se já estiver logado, não tem porquê ver a tela de login
     router.navigate(['/dashboard'], { replaceUrl: true });
     return false;
   }

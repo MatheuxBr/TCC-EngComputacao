@@ -1,6 +1,10 @@
 <div class="gerenciador-container">
   <h2>Gerenciador de Usuários</h2>
   
+  <div class="error-box" *ngIf="errorMessage" style="color: #f38ba8; margin-bottom: 15px; padding: 10px; background: rgba(243, 139, 168, 0.1); border-radius: 4px; border: 1px solid #f38ba8;">
+    {{ errorMessage }}
+  </div>
+
   <div class="table-wrapper" *ngIf="!isLoading; else loadingTpl">
     <table class="usuarios-table">
       <thead>

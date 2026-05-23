@@ -13,6 +13,7 @@ import { ToastService } from '../toast.service';
 export class GerenciadorUsuariosComponent implements OnInit {
   usuarios: UsuarioDTO[] = [];
   isLoading: boolean = true;
+  errorMessage: string | null = null;
 
   constructor(private userService: UserService, private toastService: ToastService) { }
 
@@ -22,13 +23,17 @@ export class GerenciadorUsuariosComponent implements OnInit {
 
   carregarUsuarios(): void {
     this.isLoading = true;
+    this.errorMessage = null;
     this.userService.listarUsuarios().subscribe({
       next: (data) => {
         this.usuarios = data;
-        this.isLoading = false;
       },
       error: (err) => {
+        this.errorMessage = 'Falha ao carregar os usuários. Tente novamente mais tarde.';
         this.toastService.show('Erro ao carregar usuários', 'error');
+        this.isLoading = false;
+      },
+      complete: () => {
         this.isLoading = false;
       }
     });

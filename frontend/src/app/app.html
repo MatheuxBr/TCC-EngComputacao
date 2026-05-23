@@ -1,28 +1,34 @@
-<div class="app-container" [ngClass]="{'has-sidebar': authService.isAdmin() && authService.isAuthenticated()}">
-  <!-- Header (Renderiza apenas para Admin) -->
-  <header class="admin-header" *ngIf="authService.isAdmin() && authService.isAuthenticated()">
+<div class="app-container" [ngClass]="{'has-sidebar': authService.isAuthenticated()}">
+  <!-- Header -->
+  <header class="admin-header" *ngIf="authService.isAuthenticated()">
     <button class="hamburger-btn" (click)="toggleSidebar()">
       <div class="bar"></div>
       <div class="bar"></div>
       <div class="bar"></div>
     </button>
-    <div class="header-title">Painel Administrativo</div>
-    <div class="header-user">
-      Logado como: {{ authService.getUsername() }}
-      <button class="btn-logout" (click)="authService.logout()">Sair</button>
-    </div>
+    <div class="header-title">Painel</div>
   </header>
 
-  <!-- Sidebar (Renderiza apenas para Admin) -->
-  <aside class="admin-sidebar" *ngIf="authService.isAdmin() && authService.isAuthenticated()" [class.closed]="!isSidebarOpen">
+  <!-- Sidebar -->
+  <aside class="admin-sidebar" *ngIf="authService.isAuthenticated()" [class.closed]="!isSidebarOpen">
+
+    <div class="sidebar-user-info"
+      style="padding: 20px; border-bottom: 1px solid #313244; display: flex; flex-direction: column; gap: 10px;">
+      <div style="font-size: 0.9rem; color: #cdd6f4;">
+        Logado como, <strong style="color: #89b4fa;">{{ authService.getUsername() }}</strong>
+      </div>
+      <button class="btn-logout" (click)="authService.logout()" style="width: 100%;">Sair</button>
+    </div>
+
     <nav class="sidebar-nav">
       <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-      <a routerLink="/admin/usuarios" routerLinkActive="active">Gerenciador de Usuários</a>
+      <a *ngIf="authService.isAdmin()" routerLink="/admin/usuarios" routerLinkActive="active">Gerenciador de
+        Usuários</a>
     </nav>
   </aside>
 
   <!-- Conteúdo Principal -->
-  <main class="main-content" [class.shifted]="authService.isAdmin() && authService.isAuthenticated() && isSidebarOpen">
+  <main class="main-content" [class.shifted]="authService.isAuthenticated() && isSidebarOpen">
     <router-outlet></router-outlet>
   </main>
 </div>
