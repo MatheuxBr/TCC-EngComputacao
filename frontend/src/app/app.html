@@ -1,2 +1,29 @@
-<router-outlet></router-outlet>
+<div class="app-container" [ngClass]="{'has-sidebar': authService.isAdmin() && authService.isAuthenticated()}">
+  <!-- Header (Renderiza apenas para Admin) -->
+  <header class="admin-header" *ngIf="authService.isAdmin() && authService.isAuthenticated()">
+    <button class="hamburger-btn" (click)="toggleSidebar()">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </button>
+    <div class="header-title">Painel Administrativo</div>
+    <div class="header-user">
+      Logado como: {{ authService.getUsername() }}
+      <button class="btn-logout" (click)="authService.logout()">Sair</button>
+    </div>
+  </header>
+
+  <!-- Sidebar (Renderiza apenas para Admin) -->
+  <aside class="admin-sidebar" *ngIf="authService.isAdmin() && authService.isAuthenticated()" [class.closed]="!isSidebarOpen">
+    <nav class="sidebar-nav">
+      <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+      <a routerLink="/admin/usuarios" routerLinkActive="active">Gerenciador de Usuários</a>
+    </nav>
+  </aside>
+
+  <!-- Conteúdo Principal -->
+  <main class="main-content" [class.shifted]="authService.isAdmin() && authService.isAuthenticated() && isSidebarOpen">
+    <router-outlet></router-outlet>
+  </main>
+</div>
 <app-toast></app-toast>

@@ -9,21 +9,20 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class RbacInterceptor implements HandlerInterceptor {
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+            throws Exception {
         String uri = request.getRequestURI();
-        
-        // Protege a rota de exportação de PDF
+
         if (uri.startsWith("/api/relatorios/pdf")) {
             String headerNivel = request.getHeader("X-User-Nivel");
-            
-            // 1 = Admin. Se não for admin, bloqueia.
+
             if (headerNivel == null || !headerNivel.equals("1")) {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 response.getWriter().write("Acesso Negado: Apenas administradores podem acessar este recurso.");
                 return false;
             }
         }
-        
+
         return true;
     }
 }

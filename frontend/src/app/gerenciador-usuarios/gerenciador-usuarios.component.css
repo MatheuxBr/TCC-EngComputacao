@@ -1,0 +1,92 @@
+.gerenciador-container {
+  padding: 20px;
+  background-color: #1e1e2e;
+  color: #cdd6f4;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+h2 {
+  margin-bottom: 20px;
+  color: #89b4fa;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.usuarios-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.usuarios-table th,
+.usuarios-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #313244;
+}
+
+.usuarios-table th {
+  background-color: #313244;
+  color: #bac2de;
+  font-weight: 600;
+}
+
+.usuarios-table tbody tr:hover {
+  background-color: #45475a;
+}
+
+.badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+  background-color: #a6adc8;
+  color: #11111b;
+}
+
+.badge-admin {
+  background-color: #f38ba8;
+  color: #11111b;
+}
+
+.btn-promover {
+  background-color: #a6e3a1;
+  color: #11111b;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+
+.btn-promover:hover:not(:disabled) {
+  opacity: 0.8;
+}
+
+.btn-promover:disabled {
+  background-color: #585b70;
+  color: #a6adc8;
+  cursor: not-allowed;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2em;
+  color: #a6adc8;
+}
+
+.spinner {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}

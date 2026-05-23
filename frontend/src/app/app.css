@@ -1,1 +1,134 @@
-/* Estilos globais do app */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+  background-color: #11111b; 
+  color: #cdd6f4; 
+}
+
+.admin-header {
+  height: 60px;
+  background-color: #1e1e2e; 
+  color: #cdd6f4;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.hamburger-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 24px;
+  width: 30px;
+  padding: 0;
+  margin-right: 20px;
+}
+
+.hamburger-btn .bar {
+  height: 3px;
+  width: 100%;
+  background-color: #cdd6f4;
+  border-radius: 2px;
+  transition: 0.3s;
+}
+
+.hamburger-btn:hover .bar {
+  background-color: #89b4fa; 
+}
+
+.header-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #89b4fa;
+}
+
+.header-user {
+  margin-left: auto;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.btn-logout {
+  background-color: #f38ba8;
+  color: #11111b;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+
+.btn-logout:hover {
+  opacity: 0.8;
+}
+
+.admin-sidebar {
+  position: fixed;
+  top: 60px; 
+  left: 0;
+  width: 250px;
+  height: calc(100vh - 60px);
+  background-color: #181825; 
+  transition: transform 0.3s ease;
+  z-index: 900;
+  border-right: 1px solid #313244; 
+}
+
+.admin-sidebar.closed {
+  transform: translateX(-100%);
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+}
+
+.sidebar-nav a {
+  color: #a6adc8; 
+  text-decoration: none;
+  padding: 15px 25px;
+  font-size: 1.05rem;
+  transition: 0.2s;
+}
+
+.sidebar-nav a:hover {
+  background-color: #313244;
+  color: #cdd6f4;
+}
+
+.sidebar-nav a.active {
+  background-color: #45475a;
+  color: #89b4fa;
+  border-left: 4px solid #89b4fa;
+}
+
+.main-content {
+  flex: 1;
+  padding: 0;
+  transition: margin-left 0.3s ease;
+  margin-top: 0; 
+}
+
+.has-sidebar .main-content {
+  margin-top: 60px; 
+  padding: 20px;
+}
+
+.main-content.shifted {
+  margin-left: 250px; 
+}

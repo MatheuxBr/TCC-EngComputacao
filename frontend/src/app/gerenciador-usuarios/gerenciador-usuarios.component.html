@@ -1,0 +1,46 @@
+<div class="gerenciador-container">
+  <h2>Gerenciador de Usuários</h2>
+  
+  <div class="table-wrapper" *ngIf="!isLoading; else loadingTpl">
+    <table class="usuarios-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>E-mail</th>
+          <th>Nível Atual</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of usuarios">
+          <td>{{ user.id }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <span class="badge" [ngClass]="{'badge-admin': user.idNivel === 1}">
+              {{ user.idNivel === 1 ? 'ADMIN' : 'COMUM' }}
+            </span>
+          </td>
+          <td>
+            <button 
+              class="btn-promover" 
+              (click)="promoverUsuario(user.id)" 
+              [disabled]="user.idNivel === 1">
+              Promover a Admin
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="usuarios.length === 0">
+          <td colspan="5" class="text-center">Nenhum usuário encontrado.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #loadingTpl>
+    <div class="loading-state">
+      <span class="spinner">↻</span> Carregando usuários...
+    </div>
+  </ng-template>
+</div>
