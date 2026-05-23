@@ -27,6 +27,8 @@ services:
     container_name: tcc-backend
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/tcc_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: tcc_admin
+      SPRING_DATASOURCE_PASSWORD: tcc_Fineco
     ports:
       - "8080:8080"
     depends_on:
