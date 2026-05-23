@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserService, UsuarioDTO } from '../user.service';
-import { ToastService } from '../toast/toast.service';
+import { ToastService } from '../toast.service';
 
 @Component({
   selector: 'app-gerenciador-usuarios',
@@ -14,7 +14,7 @@ export class GerenciadorUsuariosComponent implements OnInit {
   usuarios: UsuarioDTO[] = [];
   isLoading: boolean = true;
 
-  constructor(private userService: UserService, private toastService: ToastService) {}
+  constructor(private userService: UserService, private toastService: ToastService) { }
 
   ngOnInit(): void {
     this.carregarUsuarios();
