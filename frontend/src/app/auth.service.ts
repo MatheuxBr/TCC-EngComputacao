@@ -16,6 +16,9 @@ export class AuthService {
       tap(response => {
         if (response && response.success) {
           localStorage.setItem('username', response.username);
+          if (response.id) {
+            localStorage.setItem('user_id', response.id.toString());
+          }
           if (response.id_nivel) {
             localStorage.setItem('id_nivel', response.id_nivel.toString());
           }
@@ -30,6 +33,7 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('username');
+    localStorage.removeItem('user_id');
     localStorage.removeItem('id_nivel');
     this.router.navigate(['/login']);
   }
@@ -40,6 +44,11 @@ export class AuthService {
 
   getUsername(): string | null {
     return localStorage.getItem('username');
+  }
+
+  getUserId(): number | null {
+    const id = localStorage.getItem('user_id');
+    return id ? parseInt(id, 10) : null;
   }
 
   isAdmin(): boolean {

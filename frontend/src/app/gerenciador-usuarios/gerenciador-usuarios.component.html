@@ -33,6 +33,12 @@
               [disabled]="user.idNivel === 1">
               Promover a Admin
             </button>
+            <button 
+              class="btn-excluir" 
+              (click)="excluirUsuario(user.id)" 
+              [disabled]="user.id === authService.getUserId()">
+              Excluir
+            </button>
           </td>
         </tr>
         <tr *ngIf="usuarios.length === 0">

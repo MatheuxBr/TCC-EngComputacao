@@ -25,4 +25,11 @@ export class UserService {
   promoverParaAdmin(id: number): Observable<any> {
     return this.http.patch(`${this.apiUrl}/${id}/promover`, {});
   }
+
+  excluirUsuario(id: number): Observable<any> {
+    const userId = localStorage.getItem('user_id');
+    return this.http.delete(`${this.apiUrl}/${id}`, {
+      headers: userId ? { 'X-User-Id': userId } : {}
+    });
+  }
 }

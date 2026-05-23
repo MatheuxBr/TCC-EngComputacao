@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserService, UsuarioDTO } from '../user.service';
 import { ToastService } from '../toast.service';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-gerenciador-usuarios',
@@ -18,7 +19,8 @@ export class GerenciadorUsuariosComponent implements OnInit {
   constructor(
     private userService: UserService, 
     private toastService: ToastService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -55,6 +57,22 @@ export class GerenciadorUsuariosComponent implements OnInit {
         },
         error: () => {
           this.toastService.show('Erro ao promover usuário', 'error');
+          this.cdr.detectChanges();
+        }
+      });
+    }
+  }
+
+  excluirUsuario(id: number): void {
+    if (confirm('Tem certeza que deseja excluir este usuário?')) {
+      this.userService.excluirUsuario(id).subscribe({
+        next: () => {
+          this.toastService.show('Usuário excluído com sucesso!', 'success');
+          this.carregarUsuarios();
+        },
+        error: (err) => {
+          const msg = err.error?.error || 'Erro ao excluir usuário';
+          this.toastService.show(msg, 'error');
           this.cdr.detectChanges();
         }
       });

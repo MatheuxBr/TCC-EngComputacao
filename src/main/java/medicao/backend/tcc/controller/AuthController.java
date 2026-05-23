@@ -26,6 +26,7 @@ public class AuthController {
             Integer idNivel = usuario.getNivelAcesso() != null ? usuario.getNivelAcesso().getIdNivel() : null;
             return ResponseEntity.ok(Map.of(
                 "success", true,
+                "id", usuario.getId(),
                 "username", credentials.getUsername(),
                 "id_nivel", idNivel != null ? idNivel : 2
             ));

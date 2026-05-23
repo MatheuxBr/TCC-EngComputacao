@@ -90,3 +90,25 @@ h2 {
 @keyframes spin {
   100% { transform: rotate(360deg); }
 }
+
+.btn-excluir {
+  background-color: #f38ba8;
+  color: #11111b;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: opacity 0.2s;
+  margin-left: 10px;
+}
+
+.btn-excluir:hover:not(:disabled) {
+  opacity: 0.8;
+}
+
+.btn-excluir:disabled {
+  background-color: #585b70;
+  color: #a6adc8;
+  cursor: not-allowed;
+}

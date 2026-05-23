@@ -32,4 +32,16 @@ public class UsuarioController {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> excluirUsuario(@PathVariable Long id, @RequestHeader(value = "X-User-Id", required = false) Long currentUserId) {
+        if (currentUserId != null && currentUserId.equals(id)) {
+            return ResponseEntity.status(403).body(Map.of("error", "Não é possível excluir a própria conta."));
+        }
+        try {
+            usuarioService.excluirUsuario(id);
+            return ResponseEntity.ok(Map.of("message", "Usuário excluído com sucesso."));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
 }
