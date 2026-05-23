@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserService, UsuarioDTO } from '../user.service';
 import { ToastService } from '../toast.service';
@@ -15,7 +15,11 @@ export class GerenciadorUsuariosComponent implements OnInit {
   isLoading: boolean = true;
   errorMessage: string | null = null;
 
-  constructor(private userService: UserService, private toastService: ToastService) { }
+  constructor(
+    private userService: UserService, 
+    private toastService: ToastService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     this.carregarUsuarios();
@@ -27,14 +31,17 @@ export class GerenciadorUsuariosComponent implements OnInit {
     this.userService.listarUsuarios().subscribe({
       next: (data) => {
         this.usuarios = data;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         this.errorMessage = 'Falha ao carregar os usuários. Tente novamente mais tarde.';
         this.toastService.show('Erro ao carregar usuários', 'error');
         this.isLoading = false;
+        this.cdr.detectChanges();
       },
       complete: () => {
         this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -48,6 +55,7 @@ export class GerenciadorUsuariosComponent implements OnInit {
         },
         error: () => {
           this.toastService.show('Erro ao promover usuário', 'error');
+          this.cdr.detectChanges();
         }
       });
     }
