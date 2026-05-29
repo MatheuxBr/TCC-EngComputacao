@@ -2,7 +2,6 @@
   <h1>Sistema de Monitoramento de Piscina</h1>
   <p><i>Monitoramento inteligente de parâmetros de qualidade da água em tempo real</i></p>
 
-
   <p>
     <img src="https://img.shields.io/badge/Java-17-orange.svg" alt="Java 17" />
     <img src="https://img.shields.io/badge/Spring_Boot-4.0.2-brightgreen.svg" alt="Spring Boot" />
