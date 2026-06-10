@@ -4,7 +4,6 @@
 
   <p>
     <img src="https://img.shields.io/badge/Java-17-orange.svg" alt="Java 17" />
-    <img src="https://img.shields.io/badge/Spring_Boot-4.0.2-brightgreen.svg" alt="Spring Boot" />
     <img src="https://img.shields.io/badge/Angular-21.2.0-red.svg" alt="Angular" />
     <img src="https://img.shields.io/badge/InfluxDB-7.2.0-blue.svg" alt="InfluxDB" />
     <img src="https://img.shields.io/badge/Docker-Ready-2496ED.svg" alt="Docker" />
@@ -21,10 +20,9 @@ O sistema é construído com foco em **desempenho e usabilidade**, utilizando um
 
 ## ✨ Funcionalidades
 
-- 📊 **Dashboard Interativo:** Visualização de dados em tempo real utilizando gráficos (Chart.js).
+- 📊 **Dashboard Interativo:** Visualização de dados em tempo real utilizando gráficos.
 - 🕒 **Filtros Temporais:** Alternância rápida entre diferentes períodos históricos (1H, 24H, 7 Dias).
-- 📄 **Geração de Relatórios:** Exportação de dados e gráficos em formato PDF de maneira automatizada (jsPDF).
-- 🔒 **Segurança:** Autenticação via JWT (JSON Web Tokens) e rotas protegidas no frontend e backend.
+- 📄 **Geração de Relatórios:** Exportação de dados e gráficos em formato PDF de maneira automatizada.
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -32,9 +30,7 @@ O sistema é construído com foco em **desempenho e usabilidade**, utilizando um
 - **Java 17**
 - **Spring Boot 4.0.2** (Web, Actuator, Security)
 - **InfluxDB** (Armazenamento de séries temporais)
-- **JJWT** (Autenticação baseada em token)
-- **Lombok** (Redução de boilerplate code)
-- **Maven**
+- **MySQL** (Armazenamento de dados)
 
 ### Frontend
 - **Angular 21**
