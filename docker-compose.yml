@@ -5,10 +5,10 @@ services:
     image: mysql:8.0.32
     container_name: tcc-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_DATABASE: tcc_db
       MYSQL_USER: tcc_admin
-      MYSQL_PASSWORD: tcc_Fineco
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
@@ -28,7 +28,9 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/tcc_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: tcc_admin
-      SPRING_DATASOURCE_PASSWORD: tcc_Fineco
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      INFLUX_TOKEN: ${INFLUX_TOKEN}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
     ports:
       - "8080:8080"
     depends_on:

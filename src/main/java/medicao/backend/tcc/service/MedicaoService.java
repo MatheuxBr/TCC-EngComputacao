@@ -55,7 +55,6 @@ public class MedicaoService {
             periodo = "24h";
         }
 
-        // Ajustar o número de pontos baseado no período
         int tailLimit;
         switch (periodo) {
             case "1h":
