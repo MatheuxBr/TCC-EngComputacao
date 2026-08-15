@@ -25,4 +25,4 @@ jobs:
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
           echo "DB_ROOT_PASSWORD=${{ secrets.DB_ROOT_PASSWORD }}" >> .env
           
-          sudo docker-compose up -d --build
+          sudo docker compose up -d --build
