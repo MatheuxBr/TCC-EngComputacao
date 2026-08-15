@@ -29,4 +29,7 @@ jobs:
           sudo curl -sSL "https://github.com/docker/compose/releases/download/v2.24.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
           
+          # Remove os containers antigos que ficaram travados
+          sudo /usr/local/bin/docker-compose down --remove-orphans
+          
           sudo /usr/local/bin/docker-compose up -d --build
