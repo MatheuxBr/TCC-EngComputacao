@@ -19,17 +19,23 @@ public class MedicaoWebSocketService {
     private final EmailService emailService;
     private final UsuarioRepository usuarioRepository;
 
-    @Value("${alerta.ph.min:7.0}")
+    @Value("${alerta.ph.min:7.2}")
     private double phMin;
 
-    @Value("${alerta.ph.max:8.0}")
+    @Value("${alerta.ph.max:7.8}")
     private double phMax;
 
-    @Value("${alerta.temperatura.min:20.0}")
+    @Value("${alerta.temperatura.min:25.0}")
     private double tempMin;
 
-    @Value("${alerta.temperatura.max:35.0}")
+    @Value("${alerta.temperatura.max:27.0}")
     private double tempMax;
+
+    @Value("${alerta.orp.min:650.0}")
+    private double orpMin;
+
+    @Value("${alerta.orp.max:750.0}")
+    private double orpMax;
 
     @Value("${alerta.cooldown.ms:3600000}")
     private long cooldownMs;
@@ -87,8 +93,18 @@ public class MedicaoWebSocketService {
             } catch (NumberFormatException ignored) {}
         }
 
+        // Verifica ORP
+        if (medicoes.containsKey("orp")) {
+            try {
+                double orp = Double.parseDouble(medicoes.get("orp").toString());
+                if (orp < orpMin || orp > orpMax) {
+                    alertaMsg.append("ALERTA: O nível de ORP está fora do padrão (").append(orp).append(" mV).\n");
+                }
+            } catch (NumberFormatException ignored) {}
+        }
+
         if (alertaMsg.length() > 0) {
-            List<Usuario> gestores = usuarioRepository.findByNivelAcessoNomeNivel("ADMIN");
+            List<Usuario> gestores = usuarioRepository.findAdmins();
             List<String> emailsGestores = gestores.stream()
                     .map(Usuario::getEmail)
                     .filter(email -> email != null && !email.isEmpty())
@@ -100,6 +116,8 @@ public class MedicaoWebSocketService {
                     emailService.enviarEmailSimples(email, "Alerta do Sistema de Monitoramento da Piscina", mensagemFinal);
                 }
                 ultimoAlertaMs = agora; // Reinicia o cooldown
+            } else {
+                System.out.println("Alerta gerado, mas nenhum administrador com e-mail cadastrado foi encontrado.");
             }
         }
     }

@@ -23,6 +23,7 @@ public class EmailService {
             message.setSubject(assunto);
             message.setText(texto);
             emailSender.send(message);
+            System.out.println("E-mail de alerta enviado com sucesso para: " + para);
         } catch (Exception e) {
             System.err.println("Erro ao enviar email para: " + para + " - " + e.getMessage());
         }

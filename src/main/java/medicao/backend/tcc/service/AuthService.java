@@ -47,6 +47,7 @@ public class AuthService {
 
         medicao.backend.tcc.model.NivelAcesso nivelComum = new medicao.backend.tcc.model.NivelAcesso();
         nivelComum.setIdNivel(2);
+        nivelComum.setNomeNivel("COMUM");
         novoUsuario.setNivelAcesso(nivelComum);
 
         return usuarioRepository.save(novoUsuario);

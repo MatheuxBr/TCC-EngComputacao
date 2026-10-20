@@ -31,6 +31,7 @@ public class UsuarioService {
 
         NivelAcesso nivelAdmin = new NivelAcesso();
         nivelAdmin.setIdNivel(1);
+        nivelAdmin.setNomeNivel("ADMIN");
         
         usuario.setNivelAcesso(nivelAdmin);
         usuarioRepository.save(usuario);
