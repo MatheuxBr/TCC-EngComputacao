@@ -37,13 +37,21 @@ public class MedicaoWebSocketService {
     @Value("${alerta.orp.max:750.0}")
     private double orpMax;
 
-    @Value("${alerta.cooldown.ms:3600000}")
-    private long cooldownMs;
+    @Value("${alerta.cooldown.inicial.ms:3600000}")
+    private long cooldownInicialMs;
+
+    @Value("${alerta.cooldown.longo.ms:86400000}")
+    private long cooldownLongoMs;
+
+    @Value("${alerta.max.alertas.iniciais:4}")
+    private int maxAlertasIniciais;
 
     private Map<String, Object> ultimasMedicoesCache;
+    private int alertasEnviados = 0;
     private long ultimoAlertaMs = 0;
 
-    public MedicaoWebSocketService(MedicaoService medicaoService, SimpMessagingTemplate messagingTemplate, EmailService emailService, UsuarioRepository usuarioRepository) {
+    public MedicaoWebSocketService(MedicaoService medicaoService, SimpMessagingTemplate messagingTemplate,
+            EmailService emailService, UsuarioRepository usuarioRepository) {
         this.medicaoService = medicaoService;
         this.messagingTemplate = messagingTemplate;
         this.emailService = emailService;
@@ -59,18 +67,13 @@ public class MedicaoWebSocketService {
                 // envia para o websocket
                 messagingTemplate.convertAndSend("/topic/medicoes", (Object) medicoesAtuais);
                 ultimasMedicoesCache = medicoesAtuais;
-                
+
                 verificarAlertas(medicoesAtuais);
             }
         }
     }
 
     private void verificarAlertas(Map<String, Object> medicoes) {
-        long agora = System.currentTimeMillis();
-        if (agora - ultimoAlertaMs < cooldownMs) {
-            return; // Cooldown ainda ativo
-        }
-
         StringBuilder alertaMsg = new StringBuilder();
 
         // Verifica pH
@@ -80,7 +83,8 @@ public class MedicaoWebSocketService {
                 if (ph < phMin || ph > phMax) {
                     alertaMsg.append("ALERTA: O nível de pH está fora do padrão (").append(ph).append(").\n");
                 }
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
         }
 
         // Verifica Temperatura
@@ -90,7 +94,8 @@ public class MedicaoWebSocketService {
                 if (temp < tempMin || temp > tempMax) {
                     alertaMsg.append("ALERTA: A temperatura está fora do padrão (").append(temp).append("°C).\n");
                 }
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
         }
 
         // Verifica ORP
@@ -100,25 +105,44 @@ public class MedicaoWebSocketService {
                 if (orp < orpMin || orp > orpMax) {
                     alertaMsg.append("ALERTA: O nível de ORP está fora do padrão (").append(orp).append(" mV).\n");
                 }
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
         }
 
-        if (alertaMsg.length() > 0) {
-            List<Usuario> gestores = usuarioRepository.findAdmins();
-            List<String> emailsGestores = gestores.stream()
-                    .map(Usuario::getEmail)
-                    .filter(email -> email != null && !email.isEmpty())
-                    .collect(Collectors.toList());
-
-            if (!emailsGestores.isEmpty()) {
-                String mensagemFinal = "Parâmetros da Água em Alerta!\n\n" + alertaMsg.toString() + "\nPor favor, verifique o sistema de monitoramento.";
-                for (String email : emailsGestores) {
-                    emailService.enviarEmailSimples(email, "Alerta do Sistema de Monitoramento da Piscina", mensagemFinal);
-                }
-                ultimoAlertaMs = agora; // Reinicia o cooldown
-            } else {
-                System.out.println("Alerta gerado, mas nenhum administrador com e-mail cadastrado foi encontrado.");
+        if (alertaMsg.length() == 0) {
+            if (alertasEnviados > 0) {
+                System.out.println("Parâmetros normalizados. Contador de alertas resetado.");
+                alertasEnviados = 0;
             }
+            return;
+        }
+
+        // 1h para os primeiros 4 alertas, 24h para os seguintes
+        long agora = System.currentTimeMillis();
+        long cooldownAtual = (alertasEnviados < maxAlertasIniciais) ? cooldownInicialMs : cooldownLongoMs;
+
+        if (agora - ultimoAlertaMs < cooldownAtual) {
+            return; // Cooldown ainda ativo
+        }
+
+        List<Usuario> gestores = usuarioRepository.findAdmins();
+        List<String> emailsGestores = gestores.stream()
+                .map(Usuario::getEmail)
+                .filter(email -> email != null && !email.isEmpty())
+                .collect(Collectors.toList());
+
+        if (!emailsGestores.isEmpty()) {
+            int avisoAtual = alertasEnviados + 1;
+            String mensagemFinal = "Parâmetros da Água em Alerta! (Aviso " + avisoAtual + ")\n\n"
+                    + alertaMsg.toString()
+                    + "\nPor favor, verifique o sistema de monitoramento.";
+            for (String email : emailsGestores) {
+                emailService.enviarEmailSimples(email, "Alerta do Sistema de Monitoramento da Piscina", mensagemFinal);
+            }
+            ultimoAlertaMs = agora;
+            alertasEnviados++;
+        } else {
+            System.out.println("Alerta gerado, mas nenhum administrador com e-mail cadastrado foi encontrado.");
         }
     }
 }
